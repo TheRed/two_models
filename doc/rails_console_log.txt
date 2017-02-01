@@ -1,0 +1,41 @@
+irb(main):046:0> Entry.select(:id, :title, :body)
+  Entry Load (0.5ms)  SELECT `entries`.`id`, `entries`.`title`, `entries`.`body` FROM `entries`
++----+----------------------+------------------------+
+| id | title                | body                   |
++----+----------------------+------------------------+
+| 1  | はじめてのエントリー | はじめまして！         |
+| 2  | 2番目のエントリー    | おひさしぶりです！     |
+| 3  | 3番目のエントリー    | もうくじけました・・・ |
++----+----------------------+------------------------+
+3 rows in set
+
+irb(main):047:0> Comment.select(:id, :body, :status, :entry_id)
+  Comment Load (0.5ms)  SELECT `comments`.`id`, `comments`.`body`, `comments`.`status`, `comments`.`entry_id` FROM `comments`
++----+------------------------+------------+----------+
+| id | body                   | status     | entry_id |
++----+------------------------+------------+----------+
+| 1  | てすてす               | approved   | 1        |
+| 2  | どうもどうも           | unapproved | 1        |
+| 3  | こんにちはこんにちは！ | approved   | 3        |
++----+------------------------+------------+----------+
+3 rows in set
+
+irb(main):048:0> Entry.find(1).comments.select(:id, :body, :status, :entry_id)
+  Entry Load (0.4ms)  SELECT  `entries`.* FROM `entries` WHERE `entries`.`id` = 1 LIMIT 1
+  Comment Load (0.5ms)  SELECT `comments`.`id`, `comments`.`body`, `comments`.`status`, `comments`.`entry_id` FROM `comments` WHERE `comments`.`entry_id` = 1
++----+--------------+------------+----------+
+| id | body         | status     | entry_id |
++----+--------------+------------+----------+
+| 1  | てすてす     | approved   | 1        |
+| 2  | どうもどうも | unapproved | 1        |
++----+--------------+------------+----------+
+2 rows in set
+
+irb(main):005:0> Entry.select(:id, :title, :body).joins(:comments).where(comments: { status: "unapproved" })
+  Entry Load (0.5ms)  SELECT `entries`.`id`, `entries`.`title`, `entries`.`body` FROM `entries` INNER JOIN `comments` ON `comments`.`entry_id` = `entries`.`id` WHERE `comments`.`status` = 'unapproved'
++----+----------------------+----------------+
+| id | title                | body           |
++----+----------------------+----------------+
+| 1  | はじめてのエントリー | はじめまして！ |
++----+----------------------+----------------+
+1 row in set
