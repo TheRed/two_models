@@ -11,11 +11,10 @@
 #
 default: &default
   adapter: mysql2
+  host: localhost
   encoding: utf8
-  pool: 5
   username: root
-  password:
-  socket: /tmp/mysql.sock
+  password: LkbmqW3j3Ech
 
 development:
   <<: *default
@@ -48,7 +47,7 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
+  adapter: mysql2
+  encoding: unicode
   database: two_models_production
-  username: two_models
-  password: <%= ENV['TWO_MODELS_DATABASE_PASSWORD'] %>
+  pool: 5
